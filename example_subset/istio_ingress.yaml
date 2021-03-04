@@ -15,6 +15,3 @@ spec:
       protocol: HTTP
     hosts:
     - "*"
-
-
-

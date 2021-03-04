@@ -12,6 +12,3 @@ spec:
   - name: version2
     labels:
       version: v2  
- 
-
-

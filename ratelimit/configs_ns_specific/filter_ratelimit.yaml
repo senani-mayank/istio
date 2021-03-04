@@ -33,7 +33,7 @@ spec:
        cluster:
          service: ratelimit-server-service.ratelimit.svc.cluster.local
      patch:
-       operation: MERGE
+       operation: ADD
        value:
          connect_timeout: 3.25s
          hosts:

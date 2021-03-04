@@ -6,11 +6,11 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - "bloomreach"
+  - "*"
   gateways:
   - minikube-ingress-gateway
   http:
-    - name: "backend-staples"
+    - name: "backend-v2"
       match:
       - queryParams:
           version:
