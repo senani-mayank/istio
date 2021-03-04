@@ -1,0 +1,37 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+ labels:
+   app: ratelimit-demo
+ name: filter-ratelimit-actions
+ namespace: backend
+spec:
+ configPatches:
+   - applyTo: VIRTUAL_HOST
+     match:
+       context: SIDECAR_INBOUND
+       routeConfiguration:
+         vhost:
+           name: inbound|http|8899 # port must be a port your Service is listening on
+     patch:
+       operation: MERGE
+       value:
+         rate_limits:
+           - actions:
+               - header_value_match:
+                   descriptor_value: path
+                   headers:
+                     - name: :path
+                       prefix_match: /middleware
+           - actions:
+               - header_value_match:
+                   descriptor_value: get
+                   headers:
+                     - name: :method
+                       prefix_match: GET
+               - request_headers:
+                   descriptor_key: service
+                   header_name: x-service
+ workloadSelector:
+    component: backend
+    project: demo

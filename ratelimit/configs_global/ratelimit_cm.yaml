@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: ratelimit
+  name: ratelimit-cm
+data:
+  config.yaml: |
+    domain: bloomreach
+    descriptors:
+      - key: PATH
+        value: "/throttled"
+        rate_limit:
+          unit: minute
+          requests_per_unit: 1
+      - key: PATH
+        rate_limit:
+          unit: minute
+          requests_per_unit: 10
+

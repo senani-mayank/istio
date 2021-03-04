@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+ namespace: ratelimit
+ labels:
+   app: ratelimit-server
+   component: ratelimit
+   project: demo
+   kind: service
+ name: ratelimit-server-service
+spec:
+ ports:
+ - name: http-ratelimit-app
+   port: 42080
+   protocol: TCP
+   targetPort: 8080
+ - name: grpc-ratelimit-app
+   port: 42081
+   protocol: TCP
+   targetPort: 8081
+ - name: http-ratelimit-app-debug
+   port: 42082
+   protocol: TCP
+   targetPort: 6070
+ selector:
+   app: ratelimit-server
+   component: ratelimit
+   project: demo
+   kind: pod

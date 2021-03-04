@@ -1,0 +1,30 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: backend-vs
+  namespace: istio-system
+spec:
+  hosts:
+  - "bloomreach"
+  gateways:
+  - minikube-ingress-gateway
+  http:
+    - name: "backend-staples"
+      match:
+      - queryParams:
+          version:
+            exact: "v2"
+      route:
+      - destination:
+          host: backend-service.backend.svc.cluster.local
+          subset: version2
+          port:
+           number: 8899
+    - name: "backend-default"
+      route:
+      - destination:
+          host: backend-service.backend.svc.cluster.local
+          subset: default
+          port:
+           number: 8899

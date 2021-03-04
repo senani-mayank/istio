@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: ratelimit-redis
+ namespace: ratelimit
+ labels:
+   app: ratelimit-server
+   component: redis
+   project: demo
+   kind: deployment
+ 
+spec:
+ replicas: 1
+ selector:
+   matchLabels:
+     app: ratelimit-server
+     component: redis
+     project: demo
+     kind: pod
+ template:
+   metadata:
+     labels:
+       app: ratelimit-server
+       component: redis
+       project: demo
+       kind: pod
+   spec:
+     containers:
+       - image: redis:6.0.6
+         imagePullPolicy: IfNotPresent
+         name: istio-ratelimit

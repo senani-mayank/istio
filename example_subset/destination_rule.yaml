@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: backend-dr
+  namespace: backend
+spec:
+  host: backend-service.backend.svc.cluster.local
+  subsets:
+  - name: default
+    labels:
+      version: default
+  - name: version2
+    labels:
+      version: v2  
+ 
+
+

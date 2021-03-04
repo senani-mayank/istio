@@ -1,0 +1,28 @@
+---
+apiVersion: v1
+data:
+ config.yaml: |
+   domain: bloomreach
+   descriptors:
+   - key: service
+     requests_per_unit: 1
+     unit: minute
+   - key: header_match
+     rate_limit:
+       requests_per_unit: 2
+       unit: minute
+     value: path
+   - key: header_match
+     value: get
+     descriptors:
+     - key: service
+       value: boo
+       rate_limit:
+         requests_per_unit: 3
+         unit: minute
+kind: ConfigMap
+metadata:
+ name: ratelimit-cm
+ namespace: ratelimit
+ labels:
+   app: ratelimit-demo-rl
