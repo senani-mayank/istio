@@ -2,7 +2,7 @@
 apiVersion: v1
 data:
  config.yaml: |
-   domain: bloomreach
+   domain: test
    descriptors:
    - key: service
      requests_per_unit: 1

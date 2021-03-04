@@ -20,7 +20,7 @@ spec:
        operation: INSERT_BEFORE
        value:
          config:
-           domain: bloomreach # must match domain in ratelimit ConfigMap
+           domain: test # must match domain in ratelimit ConfigMap
            failure_mode_deny: false # run plugin in fail-open mode, no limiting happens if ratelimit is unavailable
            rate_limit_service:
              grpc_service:
@@ -33,7 +33,7 @@ spec:
        cluster:
          service: ratelimit-server-service.ratelimit.svc.cluster.local
      patch:
-       operation: MERGE
+       operation: ADD
        value:
          connect_timeout: 3.25s
          hosts:
