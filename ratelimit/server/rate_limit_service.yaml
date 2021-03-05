@@ -11,18 +11,18 @@ metadata:
  name: ratelimit-server-service
 spec:
  ports:
- - name: http-ratelimit-app
-   port: 42080
-   protocol: TCP
-   targetPort: 8080
+ # - name: http-ratelimit-app
+ #   port: 42080
+ #   protocol: TCP
+ #   targetPort: 8080
  - name: grpc-ratelimit-app
    port: 42081
    protocol: TCP
    targetPort: 8081
- - name: http-ratelimit-app-debug
-   port: 42082
-   protocol: TCP
-   targetPort: 6070
+ # - name: http-ratelimit-app-debug
+ #   port: 42082
+ #   protocol: TCP
+ #   targetPort: 6070
  selector:
    app: ratelimit-server
    component: ratelimit

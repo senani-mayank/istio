@@ -1,5 +1,5 @@
 ---
-# this is required for minikube to work properly
+#this is required for minikube to work properly
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:

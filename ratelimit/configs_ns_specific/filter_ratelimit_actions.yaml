@@ -12,7 +12,11 @@ spec:
        context: SIDECAR_INBOUND
        routeConfiguration:
          vhost:
-           name: inbound|http|8899 # port must be a port your Service is listening on
+           name: "inbound|http|8080" # port must be a port your Service is listening on
+           domains:
+            - "*"
+           route:
+            action: ANY
      patch:
        operation: MERGE
        value:

@@ -28,7 +28,7 @@ spec:
      containers:
      - command:
        - /bin/ratelimit
-       image: "envoyproxy/ratelimit:v1.4.0"
+       image: "envoyproxy/ratelimit:master"
        name: istio-ratelimit
        env:
          - name: REDIS_SOCKET_TYPE

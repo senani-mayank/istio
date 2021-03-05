@@ -1,11 +1,8 @@
----
-# https://istio.io/latest/docs/tasks/policy-enforcement/rate-limit/
-# Apply an EnvoyFilter to the ingressgateway to enable global rate limiting using Envoy’s global rate limit filter.
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: filter-ratelimit-svc
-  namespace: istio-system  # this should be ns of ingress
+  namespace: istio-system
 spec:
   workloadSelector:
     labels:
@@ -28,4 +25,3 @@ spec:
               - request_headers:
                   header_name: ":path"
                   descriptor_key: "PATH"
-
