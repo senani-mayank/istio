@@ -7,12 +7,7 @@ data:
   config.yaml: |
     domain: productpage-ratelimit
     descriptors:
-      - key: PATH
-        value: "/productpage"
+      - key: service
         rate_limit:
           unit: minute
-          requests_per_unit: 1
-      - key: PATH
-        rate_limit:
-          unit: minute
-          requests_per_unit: 10
+          requests_per_unit: 4

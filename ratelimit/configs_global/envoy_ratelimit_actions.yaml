@@ -23,5 +23,5 @@ spec:
           rate_limits:
             - actions: # any actions in here
               - request_headers:
-                  header_name: ":path"
-                  descriptor_key: "PATH"
+                  header_name: "x-user-domain"
+                  descriptor_key: "service"
