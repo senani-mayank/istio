@@ -2,12 +2,13 @@ apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: filter-ratelimit
-  namespace: istio-system
+  namespace: backend
 spec:
   workloadSelector:
     # select by label in the same namespace
     labels:
-      istio: ingressgateway
+      component: backend
+      project: demo
   configPatches:
     # The Envoy config you want to modify
     - applyTo: HTTP_FILTER

@@ -12,7 +12,7 @@ spec:
        context: SIDECAR_INBOUND
        routeConfiguration:
          vhost:
-           name: "inbound|http|8080" # port must be a port your Service is listening on
+           name: "inbound|http|8899" # port must be a port your Service is listening on
            domains:
             - "*"
            route:
@@ -20,22 +20,11 @@ spec:
      patch:
        operation: MERGE
        value:
-         rate_limits:
-           - actions:
-               - header_value_match:
-                   descriptor_value: path
-                   headers:
-                     - name: :path
-                       prefix_match: /middleware
-           - actions:
-               - header_value_match:
-                   descriptor_value: get
-                   headers:
-                     - name: :method
-                       prefix_match: GET
-               - request_headers:
-                   descriptor_key: service
-                   header_name: x-service
+          rate_limits:
+            - actions: # any actions in here
+              - request_headers:
+                  header_name: "x-user-domain"
+                  descriptor_key: "service"
  workloadSelector:
     component: backend
     project: demo

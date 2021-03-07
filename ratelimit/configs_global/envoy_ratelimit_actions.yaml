@@ -2,11 +2,12 @@ apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: filter-ratelimit-svc
-  namespace: istio-system
+  namespace: backend
 spec:
   workloadSelector:
     labels:
-      istio: ingressgateway
+      component: backend
+      project: demo
   configPatches:
     - applyTo: VIRTUAL_HOST
       match:
