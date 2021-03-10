@@ -2,6 +2,7 @@
 # https://github.com/envoyproxy/envoy/issues/8785
 # https://github.com/envoyproxy/envoy/issues/10112
 # https://github.com/envoyproxy/envoy/issues/4613
+# https://github.com/envoyproxy/envoy/issues/5998
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
@@ -47,11 +48,14 @@ spec:
               if response_status ~= nil and response_status ~= "200" then
                 local path = response_handle:streamInfo():dynamicMetadata():get("context")["path"]
                 local method = response_handle:streamInfo():dynamicMetadata():get("context")["method"]
+
                 --- calling fallback service
+                response_handle:logErr(method)
+                response_handle:headers():replace(":status", 200)
                 local headerss, bodys = response_handle:httpCall(
                 fallback_cluster,
                 {
-                  [":method"] = method,
+                  [":method"] = "GET",
                   [":path"] = path,
                   [":authority"] = "any",
                   ["User-Agent"] = "curl/7.75.0",
@@ -60,12 +64,10 @@ spec:
                 },
                 "",
                 50000)
-                --- following line is required, else envoy does not wait for response
-                response_handle:body()
-                response_handle:logErr("using fallback")
-                --- replace response content and status
-                response_handle:body():setBytes(bodys)
-                response_handle:headers():replace(":status", headerss:get(":status") ) 
+                response_handle:body():set("kulfa")
+
+                
+
               end
             end
 
