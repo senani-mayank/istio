@@ -25,6 +25,7 @@ spec:
       containers:
       - name: nginx
         image: brndnmtthws/nginx-echo-headers:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
 

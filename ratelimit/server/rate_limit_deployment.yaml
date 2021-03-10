@@ -29,6 +29,7 @@ spec:
      - command:
        - /bin/ratelimit
        image: "envoyproxy/ratelimit:master"
+       imagePullPolicy: IfNotPresent
        name: istio-ratelimit
        env:
          - name: REDIS_SOCKET_TYPE

@@ -1,0 +1,72 @@
+---
+# https://github.com/envoyproxy/envoy/issues/8785
+# https://github.com/envoyproxy/envoy/issues/10112
+# https://github.com/envoyproxy/envoy/issues/4613
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: fallback-envoy-filter
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: "envoy.http_connection_manager"
+            subFilter:
+              name: "envoy.router"
+    patch:
+      operation: INSERT_BEFORE
+      value:
+       name: envoy.lua
+       typed_config:
+         "@type": "type.googleapis.com/envoy.config.filter.http.lua.v2.Lua"
+         inlineCode: |
+
+            --- processed on request
+            function envoy_on_request(request_handle)
+              local path = headers:get(":path")
+              local method = headers:get(":method")
+              request_handle:streamInfo():dynamicMetadata():set("context", "path", path)
+              request_handle:streamInfo():dynamicMetadata():set("context", "method", method)
+            end
+
+            ---  processed on response
+            function envoy_on_response(response_handle)
+              local fallback_cluster = "outbound|80||httpbin.org"
+              --- extract actual status code
+              local response_status =  response_handle:headers():get(":status")
+
+              --- trigger fallback for non 200 status code
+              if response_status ~= nil and response_status ~= "200" then
+                local path = response_handle:streamInfo():dynamicMetadata():get("context")["path"]
+                local method = response_handle:streamInfo():dynamicMetadata():get("method")["method"]
+                
+                --- calling fallback service
+                local headerss, bodys = response_handle:httpCall(
+                fallback_cluster,
+                {
+                  [":method"] = method,
+                  [":path"] = path,
+                  [":authority"] = "any",
+                  ["User-Agent"] = "curl/7.75.0",
+                  ["Accept"] = "*/*",
+
+                },
+                "",
+                50000)
+                --- following line is required, else envoy does not wait for response
+                response_handle:body()
+                response_handle:logErr("using fallback")
+                --- replace response content and status
+                response_handle:headers():replace(":status", headerss:get(":status") ) 
+                response_handle:body():setBytes(bodys)
+              end
+            end
+
