@@ -45,29 +45,37 @@ spec:
               local response_status =  response_handle:headers():get(":status")
 
               --- trigger fallback for non 200 status code
-              if response_status ~= nil and response_status ~= "200" then
-                local path = response_handle:streamInfo():dynamicMetadata():get("context")["path"]
-                local method = response_handle:streamInfo():dynamicMetadata():get("context")["method"]
+             
+              local path = response_handle:streamInfo():dynamicMetadata():get("context")["path"]
+              local method = response_handle:streamInfo():dynamicMetadata():get("context")["method"]
 
-                --- calling fallback service
-                response_handle:logErr(method)
-                response_handle:headers():replace(":status", 200)
-                local headerss, bodys = response_handle:httpCall(
-                fallback_cluster,
-                {
-                  [":method"] = "GET",
-                  [":path"] = path,
-                  [":authority"] = "any",
-                  ["User-Agent"] = "curl/7.75.0",
-                  ["Accept"] = "*/*",
+              --- calling fallback service
+              response_handle:logErr(method)
+              
+              --- following line is important
+              response_handle:body()
 
-                },
-                "",
-                50000)
-                response_handle:body():set("kulfa")
+              local headerss, bodys = response_handle:httpCall(
+              fallback_cluster,
+              {
+                [":method"] = "GET",
+                [":path"] = path,
+                [":authority"] = "any",
+                ["User-Agent"] = "curl/7.75.0",
+                ["Accept"] = "*/*",
 
+              },
+              "",
+              50000, false)
+              
+              if response_handle:body() == nil then
+                response_handle:body():set("dfdf")
+              end
+
+              response_handle:body():setBytes("[]")
+              response_handle:headers():replace(":status", headerss[":status"])
                 
 
-              end
+             
             end
 

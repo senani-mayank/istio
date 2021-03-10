@@ -28,7 +28,7 @@ spec:
             exact: "fallback"
       route:
       - destination:
-          host: thiswilldefinatelyfail0.com
+          host: httpbin.org
           port:
            number: 80
     - name: "backend-default"
