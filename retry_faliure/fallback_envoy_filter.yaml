@@ -28,11 +28,11 @@ spec:
        typed_config:
          "@type": "type.googleapis.com/envoy.config.filter.http.lua.v2.Lua"
          inlineCode: |
-
+            
             --- processed on request
             function envoy_on_request(request_handle)
-              local path = headers:get(":path")
-              local method = headers:get(":method")
+              local path = request_handle:headers():get(":path")
+              local method = request_handle:headers():get(":method")
               request_handle:streamInfo():dynamicMetadata():set("context", "path", path)
               request_handle:streamInfo():dynamicMetadata():set("context", "method", method)
             end
