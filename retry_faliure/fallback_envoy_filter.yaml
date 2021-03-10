@@ -28,7 +28,7 @@ spec:
        typed_config:
          "@type": "type.googleapis.com/envoy.config.filter.http.lua.v2.Lua"
          inlineCode: |
-            
+
             --- processed on request
             function envoy_on_request(request_handle)
               local path = request_handle:headers():get(":path")
@@ -46,8 +46,7 @@ spec:
               --- trigger fallback for non 200 status code
               if response_status ~= nil and response_status ~= "200" then
                 local path = response_handle:streamInfo():dynamicMetadata():get("context")["path"]
-                local method = response_handle:streamInfo():dynamicMetadata():get("method")["method"]
-                
+                local method = response_handle:streamInfo():dynamicMetadata():get("context")["method"]
                 --- calling fallback service
                 local headerss, bodys = response_handle:httpCall(
                 fallback_cluster,
@@ -65,8 +64,8 @@ spec:
                 response_handle:body()
                 response_handle:logErr("using fallback")
                 --- replace response content and status
-                response_handle:headers():replace(":status", headerss:get(":status") ) 
                 response_handle:body():setBytes(bodys)
+                response_handle:headers():replace(":status", headerss:get(":status") ) 
               end
             end
 
